@@ -1,0 +1,54 @@
+{
+    "name": "uocnv/baokim-payment",
+    "description": "A client to connect to Bao Kim payment gateway",
+    "keywords": [
+        "uocnv",
+        "baokim-payment"
+    ],
+    "homepage": "https://github.com/uocnv/baokim-payment",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Nguyễn Văn Ước",
+            "email": "uocnv.soict.hust@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.4|^8.0",
+        "illuminate/support": "^8.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.0",
+        "phpunit/phpunit": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Uocnv\\BaokimPayment\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Uocnv\\BaokimPayment\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Uocnv\\BaokimPayment\\BaokimPaymentServiceProvider"
+            ],
+            "aliases": {
+                "BaokimPayment": "Uocnv\\BaokimPayment\\BaokimPaymentFacade"
+            }
+        }
+    }
+}
