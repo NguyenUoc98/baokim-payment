@@ -1,10 +1,7 @@
 # Very short description of the package
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/uocnv/baokim-payment.svg?style=flat-square)](https://packagist.org/packages/uocnv/baokim-payment)
-[![Total Downloads](https://img.shields.io/packagist/dt/uocnv/baokim-payment.svg?style=flat-square)](https://packagist.org/packages/uocnv/baokim-payment)
-![GitHub Actions](https://github.com/uocnv/baokim-payment/actions/workflows/main.yml/badge.svg)
-
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what PSRs you support to avoid any confusion with users and contributors.
+Package là bộ source kết nối với các cổng thanh toán của Bảo Kim, gồm các hình thức: ATM/QR, Momo official, Thu hộ, Chi
+hộ
 
 ## Installation
 
@@ -16,14 +13,36 @@ composer require uocnv/baokim-payment
 
 ## Usage
 
+- Lấy danh sách ngân hàng:
+
 ```php
-// Usage description here
+$arrayBanks = \Uocnv\BaokimPayment\Clients\ATM::getBankList();
 ```
 
-### Testing
+- Request tạo order thanh toán hình thức ATM/QR:
 
-```bash
-composer test
+```php
+$transactionId = DB::table('money_atms')->insertGetID([]);
+$amount        = 110000;
+$bankId        = 124; // $bankId = 0 nếu là hình thức QR
+$referer       = 'https://123docz.net/document/123-link-tai-lieu-user-dang-xem.htm';
+$email         = $user->use_email;
+$phone         = $user->use_phone;
+$dataRequest = \Uocnv\BaokimPayment\Clients\ATM::request(
+    transactionId: $transactionId,
+    amount       : $amount,
+    bankId       : $bankId,
+    referer      : $referer,
+    userEmail    : $email,
+    userPhone    : $phone
+);
+```
+
+- Kiểm tra toàn vẹn dữ liệu nhận từ webhook ATM/QR:
+
+```php
+$webhookData  = $request->all();
+$verifiedData = \Uocnv\BaokimPayment\Clients\ATM::checkValidData($webhookData);
 ```
 
 ### Changelog
@@ -40,8 +59,8 @@ If you discover any security related issues, please email uocnv.soict.hust@gmail
 
 ## Credits
 
--   [Nguyễn Văn Ước](https://github.com/uocnv)
--   [All Contributors](../../contributors)
+- [Nguyễn Văn Ước](https://github.com/uocnv)
+- [All Contributors](../../contributors)
 
 ## License
 
