@@ -14,6 +14,9 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Uocnv\BaokimPayment\Enums\PaymentMethod;
+use Uocnv\BaokimPayment\Exceptions\InvalidMrcOrderIdException;
+use Uocnv\BaokimPayment\Exceptions\InvalidSignatureException;
+use Uocnv\BaokimPayment\Exceptions\UnknownPaymentMethodException;
 use Uocnv\BaokimPayment\Lib\BaoKimJWT;
 
 class ATM
@@ -61,6 +64,24 @@ class ATM
             paymentMethod: PaymentMethod::ATM,
             data         : $postData
         );
+    }
+
+    /**
+     * Check valid data response from Bao Kim
+     *
+     * @param array $responseFromBaoKim
+     * @return array
+     * @throws InvalidMrcOrderIdException
+     * @throws InvalidSignatureException
+     * @throws UnknownPaymentMethodException
+     */
+    public static function checkValidData(array $responseFromBaoKim): array
+    {
+        $checkType = explode('_', Arr::get($responseFromBaoKim, 'order.mrc_order_id', ''));
+        if (isset($checkType[0]) && isset($checkType[1])) {
+            return JWTClient::checkValidData($responseFromBaoKim, $checkType[1], PaymentMethod::ATM);
+        }
+        throw new InvalidMrcOrderIdException();
     }
 
     /**

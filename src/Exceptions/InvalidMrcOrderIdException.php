@@ -6,9 +6,9 @@ use Exception;
 use ReturnTypeWillChange;
 use Throwable;
 
-class UnknownPaymentMethodException extends Exception
+class InvalidMrcOrderIdException extends Exception
 {
-    public function __construct($message = 'Unknown payment method', $code = 0, Throwable $previous = null)
+    public function __construct($message = 'Invalid mrc_order_id', $code = 0, Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }
