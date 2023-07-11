@@ -4,7 +4,7 @@ namespace Uocnv\BaokimPayment;
 
 use Illuminate\Support\ServiceProvider;
 
-class BaokimPaymentServiceProvider extends ServiceProvider
+class BaoKimPaymentServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
@@ -16,7 +16,7 @@ class BaokimPaymentServiceProvider extends ServiceProvider
          */
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'baokim-payment');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'baokim-payment');
-        // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         // $this->loadRoutesFrom(__DIR__.'/routes.php');
 
         if ($this->app->runningInConsole()) {
@@ -51,10 +51,5 @@ class BaokimPaymentServiceProvider extends ServiceProvider
     {
         // Automatically apply the package configuration
         $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'baokim-payment');
-
-        // Register the main class to use with the facade
-        $this->app->singleton('baokim-payment', function () {
-            return new BaokimPayment;
-        });
     }
 }
