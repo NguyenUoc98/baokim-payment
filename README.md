@@ -1,7 +1,12 @@
-# Very short description of the package
+# Laravel Bao Kim Payment
 
-Package là bộ source kết nối với các cổng thanh toán của Bảo Kim, gồm các hình thức: ATM/QR, Momo official, Thu hộ, Chi
-hộ
+Package is the source set to connect to Bao Kim's payment gateways, including the following forms: ATM/QR, Momo official, VA, Disbursement
+
+## Feature
+
+[x] Log request, webhook response, error
+
+[ ] Multiple key
 
 ## Installation
 
@@ -13,13 +18,13 @@ composer require uocnv/baokim-payment
 
 ## Usage
 
-- Lấy danh sách ngân hàng:
+- Get a list of banks:
 
 ```php
 $arrayBanks = \Uocnv\BaokimPayment\Clients\ATM::getBankList();
 ```
 
-- Request tạo order thanh toán hình thức ATM/QR:
+- Request to create payment order of ATM/QR:
 
 ```php
 $transactionId = DB::table('money_atms')->insertGetID([]);
@@ -38,7 +43,7 @@ $dataRequest = \Uocnv\BaokimPayment\Clients\ATM::request(
 );
 ```
 
-- Kiểm tra toàn vẹn dữ liệu nhận từ webhook ATM/QR:
+- Check the integrity of data received from ATM/QR webhooks:
 
 ```php
 $webhookData  = $request->all();
