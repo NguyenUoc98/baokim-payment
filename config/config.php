@@ -24,7 +24,8 @@ return [
                 '123doc_momo' => [
                     'key'         => 'a18ff78e7a9e44f38de372e093d87ca1',
                     'secret'      => '9623ac03057e433f95d86cf4f3bef5cc',
-                    'merchant_id' => 40002
+                    'merchant_id' => 40002,
+                    'weight'      => 1,
                 ],
             ],
         ],
@@ -37,11 +38,32 @@ return [
             'bpm_id'           => 297,
             'transaction_type' => 'money_atm',
             'secret_key'       => [
+                'noidungso12_key' => [
+                    'key'         => '40f1efdbb177411d87578d12bb6c8668',
+                    'secret'      => '749e17615231432d976b0dad9bfc5d39',
+                    'merchant_id' => 35178,
+                    'weight'      => 2,
+                ],
                 '123doc_key'      => [
                     'key'         => 'a18ff78e7a9e44f38de372e093d87ca1',
                     'secret'      => '9623ac03057e433f95d86cf4f3bef5cc',
-                    'merchant_id' => 40002
+                    'merchant_id' => 40002,
+                    'weight'      => 3,
                 ],
+            ],
+        ],
+
+        // MOBILE CARD
+        'mobile_card' => [
+            'uri_api'          => 'kingcard/api/v1/strike-card',
+            'webhook'          => 'https://1lib.vn/api/payment/baokim/webhook',
+            'transaction_type' => 'money_mobile',
+            'secret_key'       => [
+                "123doc" => [
+                    "key" => "a18ff78e7a9e44f38de372e093d87ca1",
+                    "secret" =>"9623ac03057e433f95d86cf4f3bef5cc",
+                    "merchant_id" => ""
+                ]
             ],
         ],
     ],

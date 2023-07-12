@@ -12,6 +12,7 @@ use Uocnv\BaokimPayment\Exceptions\InvalidMrcOrderIdException;
 use Uocnv\BaokimPayment\Exceptions\InvalidSignatureException;
 use Uocnv\BaokimPayment\Exceptions\UnknownPaymentMethodException;
 use Uocnv\BaokimPayment\Lib\BaoKimJWT;
+use Uocnv\BaokimPayment\Lib\Helper;
 
 class JWTClient
 {
@@ -49,17 +50,10 @@ class JWTClient
     ): ?array {
         $paymentMethod = self::$paymentMethod;
 
-        $config = config("baokim-payment.jwt.{$paymentMethod}");
-        $uri    = Arr::get($config, 'uri_api');
-        $key    = Arr::first(array_keys(Arr::get($config, 'secret_key')));
-
-        $data = [
-            'amount'     => $amount,
-            'bank_id'    => $bankId,
-            'referer'    => $referer,
-            'user_email' => $userEmail,
-            'user_phone' => $userPhone,
-        ];
+        $config   = config("baokim-payment.jwt.{$paymentMethod}");
+        $uri      = Arr::get($config, 'uri_api');
+        $arrayKey = Arr::get($config, 'secret_key');
+        $key      = Helper::getRandomWeight($arrayKey) ?: Arr::first(array_keys($arrayKey));
 
         if (!PaymentMethod::hasValue($paymentMethod)) {
             return null;
@@ -72,12 +66,8 @@ class JWTClient
                 'transaction_type' => config("baokim-payment.jwt.{$paymentMethod}.transaction_type")
             ]);
 
-            $bpmId     = Arr::get($data, 'bank_id') ?: config("baokim-payment.jwt.{$paymentMethod}.bpm_id");
-            $amount    = intval(Arr::get($data, 'amount'));
-            $orderId   = config('app.domain', '123doc') . '.' . $paymentMethod . '_' . $transactionId;
-            $urlReturn = Arr::get($data, 'referer');
-            $userEmail = Arr::get($data, 'user_email');
-            $userPhone = Arr::get($data, 'user_phone');
+            $bpmId   = $bankId ?: config("baokim-payment.jwt.{$paymentMethod}.bpm_id");
+            $orderId = config('app.domain', '123doc') . '.' . $paymentMethod . '_' . $transactionId;
 
             $postArgs = [
                 'bpm_id'         => $bpmId,
@@ -85,7 +75,7 @@ class JWTClient
                 'mrc_order_id'   => $orderId,
                 'total_amount'   => $amount,
                 'description'    => "Thanh toán Mã: {$orderId}",
-                'url_success'    => $urlReturn,
+                'url_success'    => $referer,
                 'accept_qrpay'   => 1,
                 'accept_cc'      => 1,
                 'customer_email' => $userEmail ?: 'info@123doc.org',
