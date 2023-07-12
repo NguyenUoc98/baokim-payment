@@ -6,7 +6,7 @@ Package is the source set to connect to Bao Kim's payment gateways, including th
 
 [x] Log request, webhook response, error
 
-[ ] Multiple key
+[x] Multiple key
 
 ## Installation
 
