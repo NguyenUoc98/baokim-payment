@@ -8,12 +8,15 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Uocnv\BaokimPayment\Enums\PaymentMethod;
+use Uocnv\BaokimPayment\Exceptions\InvalidMrcOrderIdException;
 use Uocnv\BaokimPayment\Exceptions\InvalidSignatureException;
 use Uocnv\BaokimPayment\Exceptions\UnknownPaymentMethodException;
 use Uocnv\BaokimPayment\Lib\BaoKimJWT;
 
 class JWTClient
 {
+    protected static string $paymentMethod = '';
+
     public static function makeClient(): Client
     {
         $host = config('baokim-payment.jwt.host');
@@ -28,20 +31,36 @@ class JWTClient
     /**
      * Request to BaoKim
      *
-     * @param string $uri
-     * @param string $key
      * @param int $transactionId
-     * @param string $paymentMethod
-     * @param array $data ['user_email', 'user_phone', 'amount', 'bank_id', 'referer']
+     * @param int $amount
+     * @param int $bankId
+     * @param string $referer
+     * @param string $userEmail
+     * @param string $userPhone
      * @return array|null
      */
     public static function request(
-        string $uri,
-        string $key,
         int $transactionId,
-        string $paymentMethod,
-        array $data
+        int $amount,
+        string $referer,
+        int $bankId = 0,
+        string $userEmail = '',
+        string $userPhone = ''
     ): ?array {
+        $paymentMethod = self::$paymentMethod;
+
+        $config = config("baokim-payment.jwt.{$paymentMethod}");
+        $uri    = Arr::get($config, 'uri_api');
+        $key    = Arr::first(array_keys(Arr::get($config, 'secret_key')));
+
+        $data = [
+            'amount'     => $amount,
+            'bank_id'    => $bankId,
+            'referer'    => $referer,
+            'user_email' => $userEmail,
+            'user_phone' => $userPhone,
+        ];
+
         if (!PaymentMethod::hasValue($paymentMethod)) {
             return null;
         }
@@ -55,7 +74,7 @@ class JWTClient
 
             $bpmId     = Arr::get($data, 'bank_id') ?: config("baokim-payment.jwt.{$paymentMethod}.bpm_id");
             $amount    = intval(Arr::get($data, 'amount'));
-            $orderId   = config('app.domain', '123doc') . $paymentMethod . '_' . $transactionId;
+            $orderId   = config('app.domain', '123doc') . '.' . $paymentMethod . '_' . $transactionId;
             $urlReturn = Arr::get($data, 'referer');
             $userEmail = Arr::get($data, 'user_email');
             $userPhone = Arr::get($data, 'user_phone');
@@ -93,7 +112,8 @@ class JWTClient
                 return $responseArray;
             }
             if (config('baokim-payment.log.error')) {
-                Log::channel(config('baokim-payment.log.chanel'))->error("Error request for orderId: #{$orderId}", $responseArray);
+                Log::channel(config('baokim-payment.log.chanel'))->error("Error request for orderId: #{$orderId}",
+                    $responseArray);
             }
             return null;
         } catch (\Exception|GuzzleException $e) {
@@ -108,39 +128,46 @@ class JWTClient
      * Check valid response data from BaoKim
      *
      * @param array $response
-     * @param int $transactionId
-     * @param string $paymentMethod
      * @return array
-     * @throws InvalidSignatureException|UnknownPaymentMethodException
+     * @throws InvalidMrcOrderIdException
+     * @throws InvalidSignatureException
+     * @throws UnknownPaymentMethodException
      */
-    public static function checkValidData(array $response, int $transactionId, string $paymentMethod): array
+    public static function checkValidData(array $response): array
     {
-        if (!PaymentMethod::hasValue($paymentMethod)) {
-            throw new UnknownPaymentMethodException();
+        $checkType = explode('_', Arr::get($response, 'order.mrc_order_id', ''));
+        if (isset($checkType[0]) && isset($checkType[1])) {
+
+            $paymentMethod = self::$paymentMethod;
+            $transactionId = $checkType[1];
+
+            if (!PaymentMethod::hasValue($paymentMethod)) {
+                throw new UnknownPaymentMethodException();
+            }
+
+            if (config('baokim-payment.log.webhook')) {
+                Log::channel(config('baokim-payment.log.chanel'))->notice("Response for orderId: #{$transactionId}",
+                    $response);
+            }
+
+            $keyUsed = DB::table('transactions_keys')
+                ->where([
+                    ['transaction_id', $transactionId],
+                    ['transaction_type', config("baokim-payment.jwt.{$paymentMethod}.transaction_type")]
+                ])->first();
+
+            if ($keyUsed &&
+                $keyUsed->key_used &&
+                self::checkSignatureWebhook(
+                    $response,
+                    config("baokim-payment.jwt.{$paymentMethod}.secret_key." . $keyUsed->key_used . '.secret'))
+            ) {
+                unset($response['sign']);
+                return $response;
+            }
+            throw new InvalidSignatureException();
         }
-
-        if (config('baokim-payment.log.webhook')) {
-            Log::channel(config('baokim-payment.log.chanel'))->warning("Response for orderId: #{$transactionId}",
-                $response);
-        }
-
-        $keyUsed = DB::table('transactions_keys')
-            ->where([
-                ['transaction_id', $transactionId],
-                ['transaction_type', config("baokim-payment.jwt.{$paymentMethod}.transaction_type")]
-            ])->first();
-
-        if ($keyUsed &&
-            $keyUsed->key_used &&
-            self::checkSignatureWebhook(
-                $response,
-                config("baokim-payment.jwt.{$paymentMethod}.secret_key" . $keyUsed->key_used . '.secret'))
-        ) {
-            unset($response['sign']);
-            return $response;
-        }
-
-        throw new InvalidSignatureException();
+        throw new InvalidMrcOrderIdException();
     }
 
     /**

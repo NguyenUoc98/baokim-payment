@@ -11,77 +11,28 @@ namespace Uocnv\BaokimPayment\Clients;
 
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Uocnv\BaokimPayment\Enums\PaymentMethod;
-use Uocnv\BaokimPayment\Exceptions\InvalidMrcOrderIdException;
-use Uocnv\BaokimPayment\Exceptions\InvalidSignatureException;
-use Uocnv\BaokimPayment\Exceptions\UnknownPaymentMethodException;
 use Uocnv\BaokimPayment\Lib\BaoKimJWT;
 
-class ATM
+class ATM extends JWTClient
 {
-    /**
-     * Create request for payment atm
-     *
-     * @param int $transactionId
-     * @param int $amount
-     * @param int $bankId
-     * @param string $referer
-     * @param string $userEmail
-     * @param string $userPhone
-     * @param string $key
-     * @return array|null
-     */
     public static function request(
         int $transactionId,
         int $amount,
-        int $bankId,
         string $referer,
+        int $bankId = 0,
         string $userEmail = '',
-        string $userPhone = '',
-        string $key = ''
+        string $userPhone = ''
     ): ?array {
-        $config = config('baokim-payment.jwt.' . PaymentMethod::ATM);
-        $uri    = Arr::get($config, 'uri_api');
-
-        if (!$key) {
-            $key = Arr::first(array_keys(Arr::get($config, 'secret_key')));
-        }
-
-        $postData = [
-            'amount'     => $amount,
-            'bank_id'    => $bankId,
-            'referer'    => $referer,
-            'user_email' => $userEmail,
-            'user_phone' => $userPhone,
-        ];
-
-        return JWTClient::request(
-            uri          : $uri,
-            key          : $key,
-            transactionId: $transactionId,
-            paymentMethod: PaymentMethod::ATM,
-            data         : $postData
-        );
+        self::$paymentMethod = PaymentMethod::ATM;
+        return parent::request($transactionId, $amount, $referer, $bankId, $userEmail, $userPhone);
     }
 
-    /**
-     * Check valid data response from Bao Kim
-     *
-     * @param array $responseFromBaoKim
-     * @return array
-     * @throws InvalidMrcOrderIdException
-     * @throws InvalidSignatureException
-     * @throws UnknownPaymentMethodException
-     */
-    public static function checkValidData(array $responseFromBaoKim): array
+    public static function checkValidData(array $response): array
     {
-        $checkType = explode('_', Arr::get($responseFromBaoKim, 'order.mrc_order_id', ''));
-        if (isset($checkType[0]) && isset($checkType[1])) {
-            return JWTClient::checkValidData($responseFromBaoKim, $checkType[1], PaymentMethod::ATM);
-        }
-        throw new InvalidMrcOrderIdException();
+        self::$paymentMethod = PaymentMethod::ATM;
+        return parent::checkValidData($response);
     }
 
     /**
@@ -92,9 +43,6 @@ class ATM
      */
     public static function getBankList(): array
     {
-        if (Cache::has('__banks_baokim')) {
-            return Cache::get('__banks_baokim');
-        }
         try {
             $jwt      = BaoKimJWT::refreshToken(PaymentMethod::ATM);
             $client   = JWTClient::makeClient();
@@ -103,11 +51,9 @@ class ATM
             if ($response->getStatusCode() == 200) {
                 $responseTxt   = $response->getBody()->getContents();
                 $responseArray = json_decode($responseTxt, true);
-                $banks         = Arr::where($responseArray['data'], function ($value) {
+                return Arr::where($responseArray['data'], function ($value) {
                     return $value['type'] == 1;
                 });
-                Cache::add('__banks_baokim', $banks, 86400);
-                return $banks;
             }
             return [];
         } catch (\Exception $e) {

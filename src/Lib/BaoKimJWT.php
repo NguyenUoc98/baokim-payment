@@ -17,8 +17,8 @@ class BaoKimJWT
 {
     const TOKEN_EXPIRE = 500; //token expire time in seconds
 
-    private static $_jwt     = null;
-    public static  $dataPost = null;
+    private static ?string $_jwt     = null;
+    public static ?array   $dataPost = null;
 
     /**
      * Refresh JWT
