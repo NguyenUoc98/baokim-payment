@@ -69,4 +69,64 @@ return [
         ],
     ],
 
+    'virtual_account' => [
+        'environment' => env('BAO_KIM_VA_ENV', 'development'),
+
+        /*
+        |--------------------------------------------------------------------------
+        | Config for development environment
+        |--------------------------------------------------------------------------
+        */
+
+        'development' => [
+            'url'          => "https://devtest.baokim.vn/Sandbox/Collection/V2",
+            'public_key'   => '',
+            'private_key'  => '',
+            'partner_code' => '',
+        ],
+
+        /*
+        |--------------------------------------------------------------------------
+        | Config for production environment
+        |--------------------------------------------------------------------------
+        */
+
+        'production' => [
+            'url'          => "https://devtest.baokim.vn/Sandbox/Collection/V2",
+            'public_key'   => '',
+            'private_key'  => '',
+            'partner_code' => '',
+        ],
+    ],
+
+    'disbursement' => [
+        'environment' => env('BAO_KIM_VA_ENV', 'development'),
+
+        /*
+        |--------------------------------------------------------------------------
+        | Config for development environment
+        |--------------------------------------------------------------------------
+        */
+
+        'development' => [
+            "url"           => "https://devtest.baokim.vn/Sandbox/FirmBanking",
+            "bk_public_key" => "",
+            "public_key"    => "",
+            "private_key"   => "",
+            "partner_code"  => ""
+        ],
+
+        /*
+        |--------------------------------------------------------------------------
+        | Config for production environment
+        |--------------------------------------------------------------------------
+        */
+
+        'production' => [
+            "url"          => "",
+            "public_key"   => "",
+            "private_key"  => "",
+            "partner_code" => ""
+        ],
+    ],
 ];
