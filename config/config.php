@@ -12,10 +12,10 @@ return [
     ],
 
     'jwt' => [
-        'host'        => 'https://dev-api.baokim.vn/payment/api/v5/',
+        'host'   => 'https://dev-api.baokim.vn/payment/api/v5/',
 
         // MOMO OFFICIAL
-        'momo'        => [
+        'momo'   => [
             'uri_api'          => 'order/send',
             'webhook'          => 'https://1lib.vn/api/payment/baokim/webhook',
             'bpm_id'           => 311,
@@ -31,7 +31,7 @@ return [
         ],
 
         // ATM & QR
-        'atm'         => [
+        'atm'    => [
             'uri_bank_list'    => 'bpm/list',
             'uri_api'          => 'order/send',
             'webhook'          => 'https://1lib.vn/api/payment/baokim/webhook',

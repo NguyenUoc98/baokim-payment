@@ -11,7 +11,7 @@ namespace Uocnv\BaokimPayment\Clients;
 
 use Uocnv\BaokimPayment\Enums\PaymentMethod;
 
-class MOMO extends JWTClient
+class Momo extends JWTClient
 {
     public static function request(
         int $transactionId,
