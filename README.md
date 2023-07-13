@@ -21,7 +21,7 @@ composer require uocnv/baokim-payment
 - Get a list of banks:
 
 ```php
-$arrayBanks = \Uocnv\BaokimPayment\Clients\ATM::getBankList();
+$arrayBanks = Uocnv\BaokimPayment\Clients\ATM::getBankList();
 ```
 
 - Request to create payment order of ATM/QR:
@@ -33,7 +33,7 @@ $bankId        = 124; // $bankId = 0 nếu là hình thức QR
 $referer       = 'https://123docz.net/document/123-link-tai-lieu-user-dang-xem.htm';
 $email         = $user->use_email;
 $phone         = $user->use_phone;
-$dataRequest = \Uocnv\BaokimPayment\Clients\ATM::request(
+$dataRequest = Uocnv\BaokimPayment\Clients\ATM::request(
     transactionId: $transactionId,
     amount       : $amount,
     bankId       : $bankId,
@@ -43,20 +43,29 @@ $dataRequest = \Uocnv\BaokimPayment\Clients\ATM::request(
 );
 ```
 
-- Check the integrity of data received from ATM/QR webhooks:
+- Request to create payment order of Mobile card:
+
+```php
+$transactionId   = DB::table('money_mobile_cards')->insertGetID([]);
+$amount          = 110000;
+$pin             = '071608559897';
+$serial          = '098353000029197';
+$telecomOperator = Uocnv\BaokimPayment\Enums\TelecomOperator::VIETTEL;
+$dataRequest     = Uocnv\BaokimPayment\Clients\MobileCard::request(
+    transactionId  : $transactionId,
+    amount         : $amount,
+    pin            : $pin,
+    serial         : $serial,
+    telecomOperator: $telecomOperator
+);
+```
+
+- Check the integrity of data received from webhooks:
 
 ```php
 $webhookData  = $request->all();
-$verifiedData = \Uocnv\BaokimPayment\Clients\ATM::checkValidData($webhookData);
+$verifiedData = Uocnv\BaokimPayment\Clients\ATM::checkValidData($webhookData);
 ```
-
-### Changelog
-
-Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
-
-## Contributing
-
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ### Security
 
@@ -65,7 +74,6 @@ If you discover any security related issues, please email uocnv.soict.hust@gmail
 ## Credits
 
 - [Nguyễn Văn Ước](https://github.com/uocnv)
-- [All Contributors](../../contributors)
 
 ## License
 
