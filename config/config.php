@@ -5,17 +5,17 @@
  */
 return [
     'log' => [
-        'chanel' => 'baokim-payment',
+        'chanel'  => 'baokim-payment',
         'request' => true,
         'webhook' => true,
         'error'   => true,
     ],
 
     'jwt' => [
-        'host' => 'https://dev-api.baokim.vn/payment/api/v5/',
+        'host'        => 'https://dev-api.baokim.vn/payment/api/v5/',
 
         // MOMO OFFICIAL
-        'momo' => [
+        'momo'        => [
             'uri_api'          => 'order/send',
             'webhook'          => 'https://1lib.vn/api/payment/baokim/webhook',
             'bpm_id'           => 311,
@@ -31,7 +31,7 @@ return [
         ],
 
         // ATM & QR
-        'atm'  => [
+        'atm'         => [
             'uri_bank_list'    => 'bpm/list',
             'uri_api'          => 'order/send',
             'webhook'          => 'https://1lib.vn/api/payment/baokim/webhook',
@@ -54,15 +54,16 @@ return [
         ],
 
         // MOBILE CARD
-        'mobile_card' => [
+        'mobile' => [
             'uri_api'          => 'kingcard/api/v1/strike-card',
             'webhook'          => 'https://1lib.vn/api/payment/baokim/webhook',
             'transaction_type' => 'money_mobile',
             'secret_key'       => [
-                "123doc" => [
-                    "key" => "a18ff78e7a9e44f38de372e093d87ca1",
-                    "secret" =>"9623ac03057e433f95d86cf4f3bef5cc",
-                    "merchant_id" => ""
+                '123doc' => [
+                    'key'         => 'a18ff78e7a9e44f38de372e093d87ca1',
+                    'secret'      => '9623ac03057e433f95d86cf4f3bef5cc',
+                    'merchant_id' => '',
+                    'weight'      => 1,
                 ]
             ],
         ],

@@ -16,7 +16,7 @@ use Uocnv\BaokimPayment\Lib\Helper;
 
 class JWTClient
 {
-    protected static string $paymentMethod = '';
+    public static string $paymentMethod = '';
 
     public static function makeClient(): Client
     {
