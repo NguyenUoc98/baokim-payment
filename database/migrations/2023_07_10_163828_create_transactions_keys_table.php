@@ -13,7 +13,7 @@ return new class extends Migration {
                 $table->string('transaction_type');
                 $table->integer('transaction_id');
                 $table->char('key_used', 20);
-                $table->timestamps();
+                $table->timestamp('created_at')->useCurrent();
             });
         }
     }
