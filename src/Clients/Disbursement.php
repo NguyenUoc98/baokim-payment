@@ -259,7 +259,7 @@ class Disbursement extends RSAClient
         ],
     ];
 
-    public function __construct($mode = 'development')
+    public function __construct(?string $mode = null)
     {
         $env = in_array($mode, ['development', 'production']) ? $mode : config('baokim-payment.disbursement.environment');
 
