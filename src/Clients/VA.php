@@ -17,9 +17,10 @@ class VA extends RSAClient
     private bool     $logWebhook;
     private string   $logError;
 
-    public function __construct(string $mode = 'development')
+    public function __construct(?string $mode)
     {
-        $env               = in_array($mode, ['development', 'production']) ? $mode : 'development';
+        $env = in_array($mode, ['development', 'production']) ? $mode : config('baokim-payment.virtual_account.environment');
+
         $this->partnerCode = config("baokim-payment.virtual_account.{$env}.partner_code");
         $this->logChanel   = config('baokim-payment.log.chanel');
         $this->logRequest  = config('baokim-payment.log.request');

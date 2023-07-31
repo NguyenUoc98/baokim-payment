@@ -261,7 +261,8 @@ class Disbursement extends RSAClient
 
     public function __construct($mode = 'development')
     {
-        $env               = in_array($mode, ['development', 'production']) ? $mode : 'development';
+        $env = in_array($mode, ['development', 'production']) ? $mode : config('baokim-payment.disbursement.environment');
+
         $this->partnerCode = config("baokim-payment.disbursement.{$env}.partner_code");
         $this->logChanel   = config('baokim-payment.log.chanel');
         $this->logRequest  = config('baokim-payment.log.request');
