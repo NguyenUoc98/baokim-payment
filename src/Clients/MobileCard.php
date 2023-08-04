@@ -45,7 +45,7 @@ class MobileCard
             return null;
         }
 
-        $orderId  = config('app.domain', '123doc') . '.' . PaymentMethod::MOBILE . '_' . $transactionId;
+        $orderId  = config('baokim-payment.jwt.key', '123doc') . '.' . PaymentMethod::MOBILE . '_' . $transactionId;
         $arrayKey = config('baokim-payment.jwt.mobile.secret_key');
         $key      = Helper::getRandomWeight($arrayKey) ?: Arr::first(array_keys($arrayKey));
 

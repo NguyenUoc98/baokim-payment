@@ -14,6 +14,8 @@ return [
     'jwt' => [
         'host'   => 'https://dev-api.baokim.vn/payment/api/v5/',
 
+        'key'    => '123doc',
+
         // MOMO OFFICIAL
         'momo'   => [
             'uri_api'          => 'order/send',

@@ -67,7 +67,7 @@ class JWTClient
             ]);
 
             $bpmId   = $bankId ?: config("baokim-payment.jwt.{$paymentMethod}.bpm_id");
-            $orderId = config('app.domain', '123doc') . '.' . $paymentMethod . '_' . $transactionId;
+            $orderId = config('baokim-payment.jwt.key', '123doc') . '.' . $paymentMethod . '_' . $transactionId;
 
             $postArgs = [
                 'bpm_id'         => $bpmId,
