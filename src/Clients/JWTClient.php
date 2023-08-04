@@ -99,6 +99,7 @@ class JWTClient
             $responseTxt   = $response->getBody()->getContents();
             $responseArray = json_decode($responseTxt, true);
             if ($response->getStatusCode() == 200 && Arr::get($responseArray, 'code') == 0) {
+                $responseArray['data']['self_order_id'] = $orderId;
                 return $responseArray;
             }
             if (config('baokim-payment.log.error')) {
