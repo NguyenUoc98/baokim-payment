@@ -207,10 +207,10 @@ class VA extends RSAClient
      * Create response for BaoKim
      *
      * @param array $data
-     * @return false|string
+     * @return array
      * @throws SignFailedException
      */
-    public function makeResponse(array $data): bool|string
+    public function makeResponse(array $data): array
     {
         $signature         = base64_encode($this->makeSignature(
             data     : $data,
@@ -218,6 +218,6 @@ class VA extends RSAClient
         ));
         $data['Signature'] = $signature;
 
-        return json_encode($data);
+        return $data;
     }
 }
