@@ -14,6 +14,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Uocnv\BaokimPayment\Enums\PaymentMethod;
 use Uocnv\BaokimPayment\Lib\BaoKimJWT;
+use Uocnv\BaokimPayment\Lib\Helper;
 
 class ATM extends JWTClient
 {
@@ -44,7 +45,11 @@ class ATM extends JWTClient
     public static function getBankList(): array
     {
         try {
-            $jwt      = BaoKimJWT::refreshToken(PaymentMethod::ATM);
+            $config   = config('baokim-payment.jwt.' . PaymentMethod::ATM);
+            $arrayKey = Arr::get($config, 'secret_key');
+            $key      = Helper::getRandomWeight($arrayKey) ?: Arr::first(array_keys($arrayKey));
+
+            $jwt      = BaoKimJWT::refreshToken(PaymentMethod::ATM, $key);
             $client   = JWTClient::makeClient();
             $response = $client->get(config('baokim-payment.jwt.atm.uri_bank_list') . '?jwt=' . $jwt);
             unset($client);
