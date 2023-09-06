@@ -20,7 +20,7 @@
         "bensampo/laravel-enum": "^6.4",
         "firebase/php-jwt": "^6.8",
         "guzzlehttp/guzzle": "^7.7",
-        "illuminate/support": "^10.0",
+        "illuminate/support": "^9.0",
         "ext-openssl": "*"
     },
     "require-dev": {
