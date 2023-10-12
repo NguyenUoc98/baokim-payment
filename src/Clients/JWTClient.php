@@ -24,6 +24,7 @@ class JWTClient
         return new Client([
             'headers'  => [
                 'Content-Type' => "application/json",
+                'Accept'       => "application/json",
             ],
             'base_uri' => $host
         ]);

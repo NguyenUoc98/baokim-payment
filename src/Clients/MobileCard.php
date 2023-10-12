@@ -76,6 +76,7 @@ class MobileCard
             $client              = new Client([
                 'headers' => [
                     'Content-Type' => "application/json",
+                    'Accept'       => "application/json",
                 ],
             ]);
 
