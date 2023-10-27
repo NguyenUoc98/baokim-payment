@@ -35,10 +35,11 @@ class JWTClient
      *
      * @param int $transactionId
      * @param int $amount
-     * @param int $bankId
      * @param string $referer
+     * @param int $bankId
      * @param string $userEmail
      * @param string $userPhone
+     * @param string $webhook
      * @return array|null
      */
     public static function request(
@@ -47,7 +48,8 @@ class JWTClient
         string $referer,
         int $bankId = 0,
         string $userEmail = '',
-        string $userPhone = ''
+        string $userPhone = '',
+        string $webhook = '',
     ): ?array {
         $paymentMethod = self::$paymentMethod;
 
@@ -82,7 +84,7 @@ class JWTClient
                 'customer_email' => $userEmail ?: 'info@123doc.org',
                 'customer_phone' => $userPhone ?: '0123456789',
                 'current_id'     => $transactionId,
-                'webhooks'       => config("baokim-payment.jwt.{$paymentMethod}.webhook")
+                'webhooks'       => $webhook ?: config("baokim-payment.jwt.{$paymentMethod}.webhook"),
             ];
 
             if (config('baokim-payment.log.request')) {

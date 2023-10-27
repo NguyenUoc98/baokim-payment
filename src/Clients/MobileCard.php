@@ -32,6 +32,7 @@ class MobileCard
      * @param string $pin
      * @param string $serial
      * @param int $telecomOperator
+     * @param string $webhook
      * @return mixed|null
      */
     public static function request(
@@ -39,7 +40,8 @@ class MobileCard
         int $amount,
         string $pin,
         string $serial,
-        int $telecomOperator
+        int $telecomOperator,
+        string $webhook = ''
     ): mixed {
         if (!TelecomOperator::hasValue($telecomOperator)) {
             return null;
@@ -62,7 +64,7 @@ class MobileCard
                 'amount'       => $amount,
                 'code'         => $pin,
                 'serial'       => $serial,
-                'webhooks'     => config('baokim-payment.jwt.mobile.webhook'),
+                'webhooks'     => $webhook ?: config('baokim-payment.jwt.mobile.webhook'),
             );
 
 

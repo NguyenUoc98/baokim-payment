@@ -24,10 +24,11 @@ class ATM extends JWTClient
         string $referer,
         int $bankId = 0,
         string $userEmail = '',
-        string $userPhone = ''
+        string $userPhone = '',
+        string $webhook = ''
     ): ?array {
         self::$paymentMethod = PaymentMethod::ATM;
-        return parent::request($transactionId, $amount, $referer, $bankId, $userEmail, $userPhone);
+        return parent::request(...func_get_args());
     }
 
     public static function checkValidData(array $response): array
