@@ -313,16 +313,16 @@ class Disbursement extends RSAClient
             'AccType'     => $accType
         ];
 
-        if ($this->logRequest) {
-            Log::channel($this->logChanel)->info("Request verify acc #{$requestId}", $dataPost);
-        }
-
         $signature = $this->makeSignature(
             data     : $dataPost,
             structure: "RequestId|RequestTime|PartnerCode|Operation|BankNo|AccNo|AccType"
         );
 
         $dataPost['Signature'] = $signature;
+
+        if ($this->logRequest) {
+            Log::channel($this->logChanel)->info("Request verify acc #{$requestId}", $dataPost);
+        }
 
         $client   = new Client();
         $response = $client->post($this->url, ["json" => $dataPost]);
@@ -395,6 +395,10 @@ class Disbursement extends RSAClient
         );
         $dataPost['Signature'] = $signature;
 
+        if ($this->logRequest) {
+            Log::channel($this->logChanel)->info("Request transfer money #{$requestId}", $dataPost);
+        }
+
         $client       = new Client();
         $response_txt = ($client->post($this->url, ["json" => $dataPost]))->getBody()->getContents();
         $response     = json_decode($response_txt, true);
@@ -447,6 +451,10 @@ class Disbursement extends RSAClient
         );
         $dataPost['Signature'] = $signature;
 
+        if ($this->logRequest) {
+            Log::channel($this->logChanel)->info("Request lookup transfer info #{$requestId}", $dataPost);
+        }
+
         $client   = new Client();
         $response = $client->post($this->url, ["json" => $dataPost]);
 
@@ -496,6 +504,10 @@ class Disbursement extends RSAClient
             structure: "RequestId|RequestTime|PartnerCode|Operation"
         );
         $dataPost['Signature'] = $signature;
+
+        if ($this->logRequest) {
+            Log::channel($this->logChanel)->info("Request lookup balance #{$requestId}", $dataPost);
+        }
 
         $client   = new Client();
         $response = $client->post($this->url, ["json" => $dataPost]);
