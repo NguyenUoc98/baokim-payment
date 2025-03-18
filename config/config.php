@@ -74,6 +74,8 @@ return [
     'virtual_account' => [
         'environment' => env('BAO_KIM_VA_ENV', 'development'),
 
+        'signature_structure' => env('BAO_KIM_VA_SIGNATURE_STRUCTURE', 'RequestId|RequestTime|PartnerCode|AccNo|ClientIdNo|TransId|TransAmount|TransTime|BefTransDebt|AffTransDebt|AccountType|OrderId'),
+
         /*
         |--------------------------------------------------------------------------
         | Config for development environment
