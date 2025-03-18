@@ -5,6 +5,7 @@ namespace Uocnv\BaokimPayment\Clients;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Uocnv\BaokimPayment\Enums\CollectionResponseCode;
 use Uocnv\BaokimPayment\Exceptions\CollectionRequestException;
 use Uocnv\BaokimPayment\Exceptions\InvalidSignatureException;
@@ -196,12 +197,13 @@ class VA extends RSAClient
         $signature = base64_decode($data['Signature']);
         unset($data['Signature']);
 
-        $signatureStructure = config('baokim-payment.virtual_account.signature_structure');
-        $dataSign = '';
-        foreach (explode('|', $signatureStructure) as $field) {
-            $dataSign .= Arr::get($data, $field, '') . '|';
+        $dataSign = config('baokim-payment.virtual_account.signature_structure');
+        foreach (explode('|', $dataSign) as $field) {
+            if ($field) {
+                $dataSign = Str::replace($field, Arr::get($data, $field, ''), $dataSign);
+            }
         }
-        if ($this->encrypter->verify(trim($dataSign, '|'), $signature)) {
+        if ($this->encrypter->verify($dataSign, $signature)) {
             return $data;
         }
 
