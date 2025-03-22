@@ -30,10 +30,10 @@ $arrayBanks = Uocnv\BaokimPayment\Clients\ATM::getBankList();
 - Request to create payment order of ATM/QR:
 
 ```php
-$transactionId = DB::table('money_atms')->insertGetID([]);
+$transactionId = 'abc123';
 $amount        = 110000;
 $bankId        = 124; // $bankId = 0 nếu là hình thức QR
-$referer       = 'https://123docz.net/document/123-link-tai-lieu-user-dang-xem.htm';
+$referer       = 'http://example.com';
 $email         = $user->use_email;
 $phone         = $user->use_phone;
 $dataRequest = Uocnv\BaokimPayment\Clients\ATM::request(
@@ -150,7 +150,7 @@ try {
 $disbursement = new Uocnv\BaokimPayment\Clients\Disbursement('production');
 $money        = 1000000;
 $referenceId  = 'gd_123123';
-$memo         = '123doc chuyen tien';
+$memo         = 'chuyen tien';
 $accNo        = '21110001400973';
 $bankNo       = 970437;
 try {
