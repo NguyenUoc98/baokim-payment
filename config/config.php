@@ -14,19 +14,19 @@ return [
     'jwt' => [
         'host'   => 'https://dev-api.baokim.vn/payment/api/v5/',
 
-        'key'    => '123doc',
+        'key'    => 'key_id',
 
         // MOMO OFFICIAL
         'momo'   => [
             'uri_api'          => 'order/send',
-            'webhook'          => 'https://1lib.vn/api/payment/baokim/webhook',
+            'webhook'          => 'http://example/api/payment/baokim/webhook',
             'bpm_id'           => 311,
             'transaction_type' => 'money_momo',
             'secret_key'       => [
-                '123doc_momo' => [
-                    'key'         => 'a18ff78e7a9e44f38de372e093d87ca1',
-                    'secret'      => '9623ac03057e433f95d86cf4f3bef5cc',
-                    'merchant_id' => 40002,
+                'key1' => [
+                    'key'         => 'a18ff78e7de372e093d87ca1',
+                    'secret'      => '9623ac03057e43cf4f3bef5cc',
+                    'merchant_id' => 400,
                     'weight'      => 1,
                 ],
             ],
@@ -36,21 +36,15 @@ return [
         'atm'    => [
             'uri_bank_list'    => 'bpm/list',
             'uri_api'          => 'order/send',
-            'webhook'          => 'https://1lib.vn/api/payment/baokim/webhook',
+            'webhook'          => 'http://example/api/payment/baokim/webhook',
             'bpm_id'           => 297,
             'transaction_type' => 'money_atm',
             'secret_key'       => [
                 'noidungso12_key' => [
-                    'key'         => '40f1efdbb177411d87578d12bb6c8668',
-                    'secret'      => '749e17615231432d976b0dad9bfc5d39',
-                    'merchant_id' => 35178,
-                    'weight'      => 2,
-                ],
-                '123doc_key'      => [
-                    'key'         => 'a18ff78e7a9e44f38de372e093d87ca1',
-                    'secret'      => '9623ac03057e433f95d86cf4f3bef5cc',
-                    'merchant_id' => 40002,
-                    'weight'      => 3,
+                    'key'         => '40f1efdbb177417578d12bb6c8668',
+                    'secret'      => '749e1762d976b0dad9bfc5d39',
+                    'merchant_id' => 178,
+                    'weight'      => 1,
                 ],
             ],
         ],
@@ -58,12 +52,12 @@ return [
         // MOBILE CARD
         'mobile' => [
             'uri_api'          => 'kingcard/api/v1/strike-card',
-            'webhook'          => 'https://1lib.vn/api/payment/baokim/webhook',
+            'webhook'          => 'http://example/api/payment/baokim/webhook',
             'transaction_type' => 'money_mobile',
             'secret_key'       => [
-                '123doc' => [
-                    'key'         => 'a18ff78e7a9e44f38de372e093d87ca1',
-                    'secret'      => '9623ac03057e433f95d86cf4f3bef5cc',
+                'key1' => [
+                    'key'         => 'a18ff78e7a9e44f32e093d87ca1',
+                    'secret'      => '9623ac030595d86cf4f3bef5cc',
                     'merchant_id' => '',
                     'weight'      => 1,
                 ]
